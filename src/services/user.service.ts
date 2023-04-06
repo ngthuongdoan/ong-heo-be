@@ -1,6 +1,8 @@
 import httpStatus from 'http-status';
 import { User } from '../models';
 import ApiError from '../utils/ApiError';
+import { FilterQuery, ObjectId } from 'mongoose';
+import { QueryOptions, QueryResult } from 'models/plugin/paginate';
 
 /**
  * Create a user
@@ -24,9 +26,6 @@ const createUser = async (userBody: Record<string, any>) => {
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-import { FilterQuery } from 'mongoose';
-import { User } from 'models';
-import { QueryOptions, QueryResult } from 'models/plugin/paginate';
 
 const queryUsers = async (filter: FilterQuery<any>, options: QueryOptions): Promise<QueryResult> => {
   const users = await User.paginate(filter, options);
