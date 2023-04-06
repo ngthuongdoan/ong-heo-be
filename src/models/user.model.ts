@@ -1,4 +1,4 @@
-import mongoose, { Document, Model, ObjectId, Schema } from 'mongoose';
+import mongoose, { Document, Model, ObjectId, Schema, model } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 // import { toJSON, paginate } from './plugins';
@@ -17,11 +17,11 @@ export interface IUser extends Document {
   isEmailVerified: boolean;
 }
 
-interface IUserModel extends Model<IUser> {
-  isEmailTaken(email: string): Promise<boolean>;
-  isPasswordMatch: (password: string) => Promise<boolean>;
+export interface IUserModel extends Model<IUser> {
+  isEmailTaken(email: string, excludeUserId?: ObjectId): Promise<boolean>;
 }
-const userSchema: Schema<IUser> = new Schema<IUser>(
+
+const userSchema = new Schema<IUser>(
   {
     name: {
       type: String,
@@ -69,7 +69,6 @@ const userSchema: Schema<IUser> = new Schema<IUser>(
 
 // add plugin that converts mongoose to json
 userSchema.set('toJSON', { getters: true, virtuals: false });
-//
 // userSchema.plugin(paginate);
 
 /**
@@ -104,4 +103,5 @@ userSchema.pre('save', async function (next) {
 /**
  * @typedef User
  */
-export const User = mongoose.model<IUserModel>('User', userSchema);
+
+export const User: IUserModel = model<IUser, IUserModel>('User', userSchema);

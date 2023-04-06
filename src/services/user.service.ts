@@ -24,7 +24,11 @@ const createUser = async (userBody: Record<string, any>) => {
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-const queryUsers = async (filter, options) => {
+import { FilterQuery } from 'mongoose';
+import { User } from 'models';
+import { QueryOptions, QueryResult } from 'models/plugin/paginate';
+
+const queryUsers = async (filter: FilterQuery<any>, options: QueryOptions): Promise<QueryResult> => {
   const users = await User.paginate(filter, options);
   return users;
 };
@@ -34,7 +38,7 @@ const queryUsers = async (filter, options) => {
  * @param {ObjectId} id
  * @returns {Promise<User>}
  */
-const getUserById = async (id) => {
+const getUserById = async (id: ObjectId) => {
   return User.findById(id);
 };
 
@@ -43,7 +47,7 @@ const getUserById = async (id) => {
  * @param {string} email
  * @returns {Promise<User>}
  */
-const getUserByEmail = async (email) => {
+const getUserByEmail = async (email: string) => {
   return User.findOne({ email });
 };
 
@@ -53,7 +57,7 @@ const getUserByEmail = async (email) => {
  * @param {Object} updateBody
  * @returns {Promise<User>}
  */
-const updateUserById = async (userId, updateBody) => {
+const updateUserById = async (userId: ObjectId, updateBody: Record<string, any>) => {
   const user = await getUserById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
@@ -71,7 +75,7 @@ const updateUserById = async (userId, updateBody) => {
  * @param {ObjectId} userId
  * @returns {Promise<User>}
  */
-const deleteUserById = async (userId) => {
+const deleteUserById = async (userId: ObjectId) => {
   const user = await getUserById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
