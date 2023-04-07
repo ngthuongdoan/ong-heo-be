@@ -1,10 +1,10 @@
-import { Request } from 'express';
-
-declare module 'express' {
+declare namespace Express {
   export interface Request {
     user: any;
   }
   export interface Response {
-    locals?: any;
+    locals: {
+      errorMessage?: string;
+    };
   }
 }
